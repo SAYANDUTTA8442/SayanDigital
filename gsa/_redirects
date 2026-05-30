@@ -1,0 +1,2 @@
+# Netlify redirects — place at your publish root
+/gsa/verify    /gsa/verify.html    200
