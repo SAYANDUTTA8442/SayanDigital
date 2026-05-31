@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Student Ambassador Program - IIT Patna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:   #4285F4;
+      --green:  #34A853;
+      --red:    #EA4335;
+      --yellow: #F9AB00;
+      --ink:    #202124;
+      --sub:    #3c4043;
+      --muted:  #5f6368;
+      --faint:  #80868b;
+      --border: #e8eaed;
+      --surf:   #f8f9fa;
+      --white:  #ffffff;
+    }
+
+    body {
+      font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
+      background: var(--surf);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── RAINBOW BAR ── */
+    .rainbow-bar {
+      height: 4px;
+      background: linear-gradient(90deg,
+        var(--blue) 0% 25%, var(--red) 25% 50%,
+        var(--yellow) 50% 75%, var(--green) 75% 100%);
+      flex-shrink: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+    .nav-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .nav-sep  { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
+    .nav-title {
+      font-size: 14px; color: var(--muted); white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-link {
+      font-size: 14px; color: var(--muted); text-decoration: none;
+      font-weight: 500; transition: color .15s; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--blue); }
+    .nav-cta {
+      height: 36px; padding: 0 18px;
+      background: var(--blue); color: var(--white);
+      border: none; border-radius: 6px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; white-space: nowrap;
+      transition: background .15s, box-shadow .15s;
+    }
+    .nav-cta:hover { background: #1a73e8; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+
+    /* ── HAMBURGER BUTTON ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px; height: 40px;
+      padding: 8px;
+      background: none; border: none;
+      cursor: pointer; border-radius: 6px;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+    .hamburger:hover { background: var(--surf); }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--muted); border-radius: 2px;
+      transition: transform .25s ease, opacity .25s ease, width .25s ease;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE MENU DRAWER ── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      z-index: 190;
+      padding: 12px 0 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      transform: translateY(-8px);
+      opacity: 0;
+      transition: transform .2s ease, opacity .2s ease;
+    }
+    .mobile-menu.open {
+      display: block;
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .mobile-menu a {
+      display: block;
+      padding: 13px 24px;
+      font-size: 15px; color: var(--ink);
+      text-decoration: none; font-weight: 500;
+      border-bottom: 1px solid var(--border);
+      transition: background .1s;
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { background: var(--surf); }
+    .mobile-menu .mob-cta {
+      margin: 14px 24px 0;
+      display: block;
+      padding: 12px 24px;
+      background: var(--blue); color: var(--white);
+      border-radius: 8px; text-align: center;
+      font-size: 15px; font-weight: 500;
+      text-decoration: none;
+      border-bottom: none;
+    }
+    .mobile-menu .mob-cta:hover { background: #1a73e8; }
+
+    /* Overlay when menu open */
+    .menu-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      z-index: 180;
+    }
+    .menu-overlay.open { display: block; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 72px 40px 64px;
+      display: flex; align-items: center;
+      justify-content: center; flex-direction: column;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #e8f0fe; color: #1a73e8;
+      font-size: 12px; font-weight: 500;
+      padding: 5px 14px; border-radius: 20px;
+      margin-bottom: 24px; letter-spacing: 0.2px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #1a73e8;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(0.7); }
+    }
+    .hero h1 {
+      font-size: 42px; font-weight: 700; color: var(--ink);
+      line-height: 1.15; margin-bottom: 16px;
+      max-width: 640px; letter-spacing: -0.5px;
+    }
+    .hero h1 span { color: var(--blue); }
+    .hero p {
+      font-size: 17px; color: var(--sub);
+      line-height: 1.7; max-width: 520px; margin-bottom: 36px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      height: 44px; padding: 0 24px;
+      background: var(--blue); color: var(--white);
+      border: none; border-radius: 8px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 15px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center;
+      transition: background .15s, box-shadow .15s, transform .1s;
+    }
+    .btn-primary:hover  { background: #1a73e8; box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-outline {
+      height: 44px; padding: 0 24px;
+      background: transparent; color: var(--blue);
+      border: 1.5px solid var(--blue); border-radius: 8px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 15px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center;
+      transition: background .15s, transform .1s;
+    }
+    .btn-outline:hover  { background: #e8f0fe; }
+    .btn-outline:active { transform: scale(0.98); }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: flex; justify-content: center;
+      flex-wrap: wrap; background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat {
+      flex: 1; min-width: 140px; padding: 28px 24px;
+      text-align: center; border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num { font-size: 32px; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+    .stat-num span { color: var(--blue); }
+    .stat-label { font-size: 11px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; }
+
+    /* ── SECTION ── */
+    .section { padding: 56px 40px; max-width: 1080px; margin: 0 auto; width: 100%; }
+    .section-header { margin-bottom: 32px; }
+    .section-label {
+      font-size: 11px; font-weight: 500; color: var(--blue);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+    }
+    .section-title { font-size: 24px; font-weight: 700; color: var(--ink); }
+    .section-sub   { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+
+    /* ── EVENT CARDS ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .event-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .event-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .card-stripe { height: 4px; }
+    .card-body   { padding: 22px 24px; flex: 1; }
+    .card-tag {
+      display: inline-block; font-size: 10px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 3px 10px; border-radius: 12px; margin-bottom: 12px;
+    }
+    .tag-blue   { background: #e8f0fe; color: #1a73e8; }
+    .tag-yellow { background: #fef7e0; color: #b06000; }
+    .tag-green  { background: #e6f4ea; color: #137333; }
+    .tag-red    { background: #fce8e6; color: #c5221f; }
+    .card-title  { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 8px; line-height: 1.35; }
+    .card-desc   { font-size: 13px; color: var(--sub); line-height: 1.6; }
+    .card-footer {
+      padding: 14px 24px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-meta  { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .card-arrow { font-size: 16px; color: var(--blue); font-weight: 500; }
+    .icon-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── ABOUT SPLIT ── */
+    .about-split {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 48px; align-items: center;
+    }
+    .about-text h2 { font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 16px; line-height: 1.25; }
+    .about-text p  { font-size: 15px; color: var(--sub); line-height: 1.75; margin-bottom: 16px; }
+    .about-text p:last-of-type { margin-bottom: 0; }
+    .about-visual { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .about-vis-header {
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .about-vis-header span { font-size: 13px; font-weight: 500; color: var(--ink); }
+    .dots { display: flex; gap: 6px; }
+    .dot  { width: 10px; height: 10px; border-radius: 50%; }
+    .timeline { padding: 20px; }
+    .tl-item  { display: flex; gap: 14px; margin-bottom: 20px; }
+    .tl-item:last-child { margin-bottom: 0; }
+    .tl-dot-wrap { display: flex; flex-direction: column; align-items: center; }
+    .tl-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .tl-line { width: 1px; flex: 1; background: var(--border); margin-top: 6px; }
+    .tl-item:last-child .tl-line { display: none; }
+    .tl-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+    .tl-date  { font-size: 11px; color: var(--muted); }
+
+    /* ── TEAM ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 660px;
+    }
+    .team-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 8px; padding: 28px 16px; text-align: center;
+    }
+    .team-card a.team-email {
+      display: inline-block; margin-top: 8px;
+      font-size: 11px; color: var(--blue);
+      text-decoration: none; word-break: break-all;
+    }
+    .team-card a.team-email:hover { text-decoration: underline; }
+    .avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; font-weight: 700; margin: 0 auto 14px;
+    }
+    .av-blue   { background: #e8f0fe; color: #1a73e8; }
+    .av-green  { background: #e6f4ea; color: #137333; }
+    .av-yellow { background: #fef7e0; color: #b06000; }
+    .team-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .team-role { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    /* ── CTA BAND ── */
+    .cta-band { background: var(--blue); padding: 56px 40px; text-align: center; }
+    .cta-band h2 { font-size: 26px; font-weight: 700; color: var(--white); margin-bottom: 12px; }
+    .cta-band p  { font-size: 15px; color: rgba(255,255,255,.82); margin-bottom: 28px; line-height: 1.6; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-white {
+      height: 44px; padding: 0 28px;
+      background: var(--white); color: var(--blue);
+      border: none; border-radius: 8px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 15px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center;
+      transition: box-shadow .15s, transform .1s;
+    }
+    .btn-white:hover  { box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+    .btn-white:active { transform: scale(0.98); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--white); border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      display: flex; align-items: flex-start;
+      justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .footer-left  { font-size: 12px; color: var(--faint); line-height: 1.7; }
+    .footer-right { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-link  { font-size: 12px; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-link:hover { color: var(--blue); }
+
+    /* ── MISC ── */
+    .full-border { border-top: 1px solid var(--border); }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .nav-right  { display: none; }
+      .hamburger  { display: flex; }
+      nav         { padding: 0 20px; }
+      .nav-title  { font-size: 12px; }
+    }
+
+    @media (max-width: 640px) {
+      .hero       { padding: 48px 20px 40px; }
+      .hero h1    { font-size: 26px; letter-spacing: -0.3px; }
+      .hero p     { font-size: 15px; }
+      .hero-badge { font-size: 11px; }
+
+      .stats-row  { }
+      .stat       { min-width: 50%; border-right: none; border-bottom: 1px solid var(--border); padding: 20px 16px; }
+      .stat:nth-child(odd)  { border-right: 1px solid var(--border); }
+      .stat:last-child      { border-bottom: none; }
+      .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+
+      .section    { padding: 36px 20px; }
+
+      .card-grid  { grid-template-columns: 1fr; }
+
+      .about-split { grid-template-columns: 1fr; gap: 24px; }
+
+      .team-grid  { grid-template-columns: 1fr; max-width: 100%; }
+
+      .cta-band   { padding: 40px 20px; }
+      .cta-band h2 { font-size: 22px; }
+
+      footer      { padding: 20px; flex-direction: column; }
+      .footer-right { gap: 12px; }
+    }
+
+    @media (min-width: 641px) and (max-width: 860px) {
+      .hero h1    { font-size: 34px; }
+      .section    { padding: 48px 28px; }
+      .about-split { grid-template-columns: 1fr; gap: 28px; }
+      .team-grid  { grid-template-columns: repeat(3, 1fr); max-width: 100%; }
+      footer      { padding: 20px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="rainbow-bar"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-left">
+      <svg width="82" height="26" viewBox="0 0 92 30" xmlns="http://www.w3.org/2000/svg" aria-label="Google" style="flex-shrink:0;">
+        <path d="M38.16 15.8c0 4.34-3.39 7.54-7.55 7.54s-7.55-3.2-7.55-7.54c0-4.37 3.39-7.54 7.55-7.54s7.55 3.17 7.55 7.54zm-3.31 0c0-2.71-1.97-4.57-4.24-4.57s-4.24 1.86-4.24 4.57c0 2.68 1.97 4.57 4.24 4.57s4.24-1.89 4.24-4.57z" fill="#EA4335"/>
+        <path d="M53.16 15.8c0 4.34-3.39 7.54-7.55 7.54s-7.55-3.2-7.55-7.54c0-4.37 3.38-7.54 7.55-7.54s7.55 3.17 7.55 7.54zm-3.31 0c0-2.71-1.97-4.57-4.24-4.57s-4.24 1.86-4.24 4.57c0 2.68 1.97 4.57 4.24 4.57s4.24-1.89 4.24-4.57z" fill="#FBBC05"/>
+        <path d="M67.49 8.72v13.6c0 5.6-3.3 7.88-7.2 7.88-3.67 0-5.88-2.46-6.71-4.47l2.88-1.2c.52 1.23 1.78 2.69 3.83 2.69 2.51 0 4.06-1.54 4.06-4.45v-1.09h-.11c-.75.92-2.18 1.72-4 1.72-3.8 0-7.28-3.31-7.28-7.57 0-4.29 3.48-7.57 7.28-7.57 1.81 0 3.24.8 4 1.69h.11V8.72h3.14zm-2.9 7.11c0-2.68-1.78-4.63-4.06-4.63-2.3 0-4.23 1.95-4.23 4.63 0 2.65 1.92 4.57 4.23 4.57 2.28 0 4.06-1.92 4.06-4.57z" fill="#4285F4"/>
+        <path d="M72.52 1.25v21.9h-3.23V1.25h3.23z" fill="#34A853"/>
+        <path d="M85.5 18.57l2.57 1.71c-.83 1.23-2.83 3.34-6.28 3.34-4.28 0-7.48-3.31-7.48-7.54 0-4.49 3.23-7.54 7.11-7.54 3.91 0 5.82 3.11 6.44 4.79l.34.86-10.08 4.17c.77 1.51 1.97 2.28 3.67 2.28 1.7 0 2.88-.84 3.71-2.07zm-7.91-2.71l6.74-2.8c-.37-.94-1.49-1.6-2.8-1.6-1.69 0-4.03 1.49-3.94 4.4z" fill="#EA4335"/>
+        <path d="M13.3 13.86v-3.1h10.44c.1.54.16 1.17.16 1.86 0 2.31-.63 5.17-2.67 7.21-1.98 2.07-4.52 3.17-7.9 3.17C6.64 23 1.25 17.78 1.25 11S6.64-.98 13.33-.98c3.46 0 5.93 1.36 7.78 3.13l-2.19 2.19c-1.33-1.24-3.13-2.21-5.59-2.21-4.57 0-8.14 3.68-8.14 8.25s3.57 8.25 8.14 8.25c2.96 0 4.65-1.19 5.73-2.27.88-.88 1.46-2.13 1.68-3.84H13.3z" fill="#4285F4"/>
+      </svg>
+      <div class="nav-sep"></div>
+      <span class="nav-title">Student Ambassador Program &nbsp;·&nbsp; IIT Patna</span>
+    </div>
+
+    <!-- Desktop links -->
+    <div class="nav-right">
+      <a href="#events" class="nav-link">Events</a>
+      <a href="#about"  class="nav-link">About</a>
+      <a href="#team"   class="nav-link">Team</a>
+      <a href="verify.html" class="nav-link">Verify Certificate</a>
+      <a href="mailto:gsa.iitp@gmail.com" class="nav-cta">Contact Us</a>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="menu-overlay" id="menu-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <a href="#events" class="mob-link">Events</a>
+    <a href="#about"  class="mob-link">About</a>
+    <a href="#team"   class="mob-link">Team</a>
+    <a href="verify.html" class="mob-link">Verify Certificate</a>
+    <a href="mailto:gsa.iitp@gmail.com" class="mob-cta">Contact Us</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Active Program &nbsp;·&nbsp; IIT Patna Chapter
+    </div>
+    <h1>Building the next generation of <span>Google developers</span></h1>
+    <p>The Google Student Ambassador Program at IIT Patna connects students with Google technologies, organizes events, and fosters a community of builders, creators, and innovators on campus.</p>
+    <div class="hero-actions">
+      <a href="#events" class="btn-primary">Explore Events</a>
+      <a href="verify.html" class="btn-outline">Verify Certificate</a>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat reveal">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Events Hosted</div>
+    </div>
+    <div class="stat reveal" style="transition-delay:.08s">
+      <div class="stat-num">100<span>+</span></div>
+      <div class="stat-label">Students Reached</div>
+    </div>
+    <div class="stat reveal" style="transition-delay:.16s">
+      <div class="stat-num">3<span>+</span></div>
+      <div class="stat-label">Active Ambassadors</div>
+    </div>
+    <div class="stat reveal" style="transition-delay:.24s">
+      <div class="stat-num">IIT<span> P</span></div>
+      <div class="stat-label">Patna Chapter</div>
+    </div>
+  </div>
+
+  <!-- Events -->
+  <div id="events" class="full-border">
+    <div class="section">
+      <div class="section-header reveal">
+        <div class="section-label">Events &amp; Initiatives</div>
+        <div class="section-title">What we've been up to</div>
+        <div class="section-sub">Workshops, competitions, and sessions organized by the GSA team at IIT Patna.</div>
+      </div>
+      <div class="card-grid">
+
+        <a href="#" class="event-card reveal">
+          <div class="card-stripe" style="background:var(--yellow);"></div>
+          <div class="card-body">
+            <span class="card-tag tag-yellow">Competition</span>
+            <div class="card-title">Google Gemini Pitch Night</div>
+            <div class="card-desc">Students pitched AI-powered ideas built using the Gemini API. Top projects won certificates of excellence and Google swag.</div>
+          </div>
+          <div class="card-footer">
+            <div class="card-meta"><div class="icon-dot" style="background:var(--yellow);"></div>May 2026</div>
+            <div class="card-arrow">→</div>
+          </div>
+        </a>
+
+        <a href="#" class="event-card reveal" style="transition-delay:.06s">
+          <div class="card-stripe" style="background:var(--blue);"></div>
+          <div class="card-body">
+            <span class="card-tag tag-blue">Workshop</span>
+            <div class="card-title">Game Night with Google</div>
+            <div class="card-desc">A fun-filled evening of tech trivia, collaborative coding challenges, and Google-themed games for the student community.</div>
+          </div>
+          <div class="card-footer">
+            <div class="card-meta"><div class="icon-dot" style="background:var(--blue);"></div>April 2026</div>
+            <div class="card-arrow">→</div>
+          </div>
+        </a>
+
+        <a href="#" class="event-card reveal" style="transition-delay:.12s">
+          <div class="card-stripe" style="background:var(--green);"></div>
+          <div class="card-body">
+            <span class="card-tag tag-green">Talk</span>
+            <div class="card-title">Cloud for Students</div>
+            <div class="card-desc">An introductory session on Google Cloud Platform — covering free credits, core products, and how to deploy your first app.</div>
+          </div>
+          <div class="card-footer">
+            <div class="card-meta"><div class="icon-dot" style="background:var(--green);"></div>March 2026</div>
+            <div class="card-arrow">→</div>
+          </div>
+        </a>
+<!-- 
+        <a href="verify.html" class="event-card reveal" style="transition-delay:.18s;border-style:dashed;">
+          <div class="card-stripe" style="background:var(--border);"></div>
+          <div class="card-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px 24px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style="margin-bottom:12px;color:var(--muted);">
+              <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M7 9h10M7 12h7M7 15h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M16 16l2 2 3-3" stroke="#34A853" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="card-title" style="color:var(--muted);">Received a certificate?</div>
+            <div class="card-desc">Verify its authenticity using our certificate verification portal.</div>
+          </div>
+          <div class="card-footer">
+            <div class="card-meta" style="color:var(--blue);">Verify Certificate</div>
+            <div class="card-arrow">→</div>
+          </div>
+        </a> -->
+
+      </div>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div id="about" style="background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="section">
+      <div class="about-split">
+        <div class="about-text reveal">
+          <div class="section-label" style="margin-bottom:12px;">About the program</div>
+          <h2>Connecting students with Google's ecosystem</h2>
+          <p>The Google Student Ambassador Program selects passionate students at leading universities to act as on-campus representatives for Google. Ambassadors run events, organize workshops, and create opportunities for peers to engage with Google technologies.</p>
+          <p>The IIT Patna chapter is led by Sayan Dutta alongside a core team — with many more members contributing across different working groups throughout the academic year.</p>
+          <a href="mailto:gsa.iitp@gmail.com" class="btn-outline" style="margin-top:8px;">Get in touch</a>
+        </div>
+        <div class="about-visual reveal" style="transition-delay:.1s;">
+          <div class="about-vis-header">
+            <div class="dots">
+              <div class="dot" style="background:#EA4335;"></div>
+              <div class="dot" style="background:#F9AB00;"></div>
+              <div class="dot" style="background:#34A853;"></div>
+            </div>
+            <span>2025–26 Timeline</span>
+          </div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot-wrap"><div class="tl-dot" style="background:var(--green);"></div><div class="tl-line"></div></div>
+              <div class="tl-content"><div class="tl-title">Cloud for Students Talk</div><div class="tl-date">March 2026</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot-wrap"><div class="tl-dot" style="background:var(--blue);"></div><div class="tl-line"></div></div>
+              <div class="tl-content"><div class="tl-title">Game Night with Google</div><div class="tl-date">April 2026</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot-wrap"><div class="tl-dot" style="background:var(--yellow);"></div><div class="tl-line"></div></div>
+              <div class="tl-content"><div class="tl-title">Gemini Pitch Night</div><div class="tl-date">May 2026</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team -->
+  <div id="team">
+    <div class="section">
+      <div class="section-header reveal">
+        <div class="section-label">The Team</div>
+        <div class="section-title">Meet the ambassadors</div>
+        <div class="section-sub">The core team leading the GSA chapter at IIT Patna — with many more members active across different working groups.</div>
+      </div>
+      <div class="team-grid">
+        <div class="team-card reveal">
+          <div class="avatar av-blue">SD</div>
+          <div class="team-name">Sayan Dutta</div>
+          <div class="team-role">Lead Ambassador<br>GID · 986</div>
+          <a href="mailto:sayandutta.iitp@gmail.com" class="team-email">sayandutta.iitp@gmail.com</a>
+        </div>
+        <div class="team-card reveal" style="transition-delay:.06s">
+          <div class="avatar av-green">DB</div>
+          <div class="team-name">Dipankar Biswas</div>
+          <div class="team-role">Event Head<br>GID · 3534</div>
+          <a href="mailto:dipankar.iitp@gmail.com" class="team-email">dipankar.iitp@gmail.com</a>
+        </div>
+        <div class="team-card reveal" style="transition-delay:.12s">
+          <div class="avatar av-yellow">SK</div>
+          <div class="team-name">Shiv Kumar</div>
+          <div class="team-role">Program Head<br>GID · 1234</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Band -->
+  <div class="cta-band reveal">
+    <h2>Stay connected with GSA IIT Patna</h2>
+    <p>Follow our events, workshops, and initiatives. Reach out if you want to collaborate or attend our next session.</p>
+    <a href="mailto:gsa.iitp@gmail.com" class="btn-white">Contact the team</a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-left">
+      Google Student Ambassador Program &nbsp;·&nbsp; Indian Institute of Technology Patna<br>
+      <a href="mailto:gsa.iitp@gmail.com" style="color:var(--blue);text-decoration:none;font-size:12px;">gsa.iitp@gmail.com</a>
+      &nbsp;·&nbsp; This is a student-run initiative. Not an official Google product page.
+    </div>
+    <div class="footer-right">
+      <a href="#events" class="footer-link">Events</a>
+      <a href="#about"  class="footer-link">About</a>
+      <a href="#team"   class="footer-link">Team</a>
+      <a href="verify.html" class="footer-link">Verify Certificate</a>
+      <a href="mailto:gsa.iitp@gmail.com" class="footer-link">Contact</a>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger menu
+    const hamburger   = document.getElementById('hamburger');
+    const mobileMenu  = document.getElementById('mobile-menu');
+    const overlay     = document.getElementById('menu-overlay');
+
+    function openMenu() {
+      hamburger.classList.add('open');
+      hamburger.setAttribute('aria-expanded', 'true');
+      mobileMenu.classList.add('open');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      mobileMenu.classList.remove('open');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+    });
+
+    overlay.addEventListener('click', closeMenu);
+
+    // Close on any mobile menu link click
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', closeMenu);
+    });
+
+    // Close if window widens past breakpoint
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 860) closeMenu();
+    });
+
+    // Scroll reveal
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          const navH = document.querySelector('nav').offsetHeight;
+          const top  = target.getBoundingClientRect().top + window.scrollY - navH - 8;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
