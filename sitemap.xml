@@ -45,4 +45,18 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://sayandigital.netlify.app/gsa/</loc>
+    <lastmod>2026-05-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- GSA Certificate Verification -->
+  <url>
+    <loc>https://sayandigital.netlify.app/gsa/verify.html</loc>
+    <lastmod>2026-05-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.90</priority>
+  </url>
 </urlset>
